@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace TigerCompiler
 {
+    using System.Text;
+
     enum BinOp
     {
         Plus, Minus, Times, Div
-    } 
+    }
 
     class Expression
     {
@@ -86,7 +83,7 @@ namespace TigerCompiler
     }
 
     class ExpressionList
-    { 
+    {
     }
 
     class PairExpressionList : ExpressionList
