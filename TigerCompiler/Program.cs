@@ -19,6 +19,29 @@ namespace TigerCompiler
     // BinOp -> x                                       (Times)
     // BinOp -> /                                       (Divide)
 
+    // Tree-like Structure.
+    //
+    // ------------------------------------- Statements -------------------------------------------
+    // 
+    //           CompoundStatement         AssignStatement          PrintStatement
+    //             /            \                 |                        |
+    //        Statement      Statement        Expression            ExpressionList
+    //
+    //
+    // ------------------------------------- Expresssions -----------------------------------------
+    //
+    //           OpExpression             SeqExpression         IdExpression      NumExpression
+    //            /        \               /         \                |                 | 
+    //      Expression  Expression    Statement  Expression        string              int
+    //
+    // 
+    // ------------------------------------- ExpressionList ---------------------------------------
+    //
+    //           PairExpressionList      LastExpressionList
+    //              /          \                 |
+    //        Expression  ExpressionList     Expression
+    //
+    //---------------------------------------------------------------------------------------------
     class Program
     {
         static void Main(string[] args)
