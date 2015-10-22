@@ -3,25 +3,22 @@ namespace TigerCompiler
 {
     using System.Text;
 
-    class Statement
+    class Statement : Node
     {
     }
 
     class CompoundStatement : Statement
     {
-        public Statement s1;
-        public Statement s2;
-
         public CompoundStatement(Statement s1, Statement s2)
         {
-            this.s1 = s1;
-            this.s2 = s2;
+            this.left = s1;
+            this.right = s2;
         }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0} ; {1}", s1, s2);
+            sb.AppendFormat("{0} ; {1}", this.left, this.right);
             return sb.ToString();
         }
     }
@@ -29,35 +26,32 @@ namespace TigerCompiler
     class AssignStatement : Statement
     {
         public string id;
-        public Expression exp;
 
         public AssignStatement(string id, Expression exp)
         {
             this.id = id;
-            this.exp = exp;
+            this.left = exp;
         }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0} := {1}", id, exp);
+            sb.AppendFormat("{0} := {1}", id, this.left);
             return sb.ToString();
         }
     }
 
     class PrintStatement : Statement
     {
-        public ExpressionList list;
-
         public PrintStatement(ExpressionList list)
         {
-            this.list = list;
+            this.left = list;
         }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("print({0})", list);
+            sb.AppendFormat("print({0})", this.left);
             return sb.ToString();
         }
     }

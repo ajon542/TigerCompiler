@@ -76,6 +76,8 @@ namespace TigerCompiler
                 new PrintStatement(new LastExpressionList(new NumExpression(3))));
             Console.WriteLine(example1);
 
+            Traverse(example1);
+
             // Example 2:
             //
             //              CompoundStm
@@ -101,6 +103,7 @@ namespace TigerCompiler
                                                           new PairExpressionList(new NumExpression(2), new LastExpressionList(new NumExpression(3))))),
                 new PrintStatement(new LastExpressionList(new NumExpression(4))));
             Console.WriteLine(example2);
+            Traverse(example2);
 
 
             // Example 3:
@@ -128,9 +131,34 @@ namespace TigerCompiler
                     new PrintStatement(new LastExpressionList(new NumExpression(1))), new NumExpression(2)))),
                 new PrintStatement(new LastExpressionList(new NumExpression(3))));
             Console.WriteLine(example3);
+            Traverse(example3);
 
             Console.WriteLine("\nPress any key to quit...");
             Console.ReadKey(true);
+        }
+
+        public static void Traverse(Node node)
+        {
+            if(node == null)
+            {
+                return;
+            }
+
+            if(node.left == null && node.right == null)
+            {
+                // Left node.
+                Console.WriteLine("Leaf node found");
+            }
+
+            if(node.left != null)
+            {
+                Traverse(node.left);
+            }
+
+            if (node.right != null)
+            {
+                Traverse(node.right);
+            }
         }
     }
 }

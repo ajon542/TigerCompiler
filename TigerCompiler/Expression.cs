@@ -8,7 +8,7 @@ namespace TigerCompiler
         Plus, Minus, Times, Div
     }
 
-    class Expression
+    class Expression : Node
     {
     }
 
@@ -44,9 +44,7 @@ namespace TigerCompiler
 
     class OpExpression : Expression
     {
-        public Expression left;
         public BinOp op;
-        public Expression right;
 
         public OpExpression(Expression left, BinOp op, Expression right)
         {
@@ -58,66 +56,58 @@ namespace TigerCompiler
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0} {1} {2}", left, op, right);
+            sb.AppendFormat("{0} {1} {2}", this.left, op, this.right);
             return sb.ToString();
         }
     }
 
     class SeqExpression : Expression
     {
-        public Statement statement;
-        public Expression exp;
-
         public SeqExpression(Statement statement, Expression exp)
         {
-            this.statement = statement;
-            this.exp = exp;
+            this.left = statement;
+            this.right = exp;
         }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("({0}, {1})", statement, exp);
+            sb.AppendFormat("({0}, {1})", this.left, this.right);
             return sb.ToString();
         }
     }
 
-    class ExpressionList
+    class ExpressionList : Node
     {
     }
 
     class PairExpressionList : ExpressionList
     {
-        public Expression head;
-        public ExpressionList tail;
-
         public PairExpressionList(Expression head, ExpressionList tail)
         {
-            this.head = head;
-            this.tail = tail;
+            this.left = head;
+            this.right = tail;
         }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0}, {1}", head, tail);
+            sb.AppendFormat("{0}, {1}", this.left, this.right);
             return sb.ToString();
         }
     }
 
     class LastExpressionList : ExpressionList
     {
-        public Expression last;
-
         public LastExpressionList(Expression last)
         {
-            this.last = last;
+            this.left = last;
         }
 
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0}", last);
+            sb.AppendFormat("{0}", this.left);
             return sb.ToString();
         }
     }
