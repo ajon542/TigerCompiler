@@ -144,21 +144,11 @@ namespace TigerCompiler
                 return;
             }
 
-            if(node.left == null && node.right == null)
-            {
-                // Left node.
-                Console.WriteLine("Leaf node found");
-            }
-
-            if(node.left != null)
-            {
-                Traverse(node.left);
-            }
-
-            if (node.right != null)
-            {
-                Traverse(node.right);
-            }
+            Traverse(node.left);
+            
+            Console.WriteLine("[Node] {0}", node.GetType());
+            
+            Traverse(node.right);
         }
     }
 }
