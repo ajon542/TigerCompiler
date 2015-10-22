@@ -74,12 +74,40 @@ namespace TigerCompiler
             // print(1, 2, 3) ; print(4)
             //
             CompoundStatement example2 = new CompoundStatement(
-                new PrintStatement(new PairExpressionList(new NumExpression(1), 
+                new PrintStatement(new PairExpressionList(new NumExpression(1),
                                                           new PairExpressionList(new NumExpression(2), new LastExpressionList(new NumExpression(3))))),
                 new PrintStatement(new LastExpressionList(new NumExpression(4))));
             Console.WriteLine(example2);
 
-            for (; ; ) { }
+
+            // Example 3:
+            //
+            //              CompoundStm
+            //               /         \
+            //          PrintStm     PrintStm
+            //             /             \
+            //       LastExpList     LastExpList
+            //           /                |
+            //       SeqExp               |
+            //      /        \            |
+            //  PrintStm   LastExpList    |
+            //     |          |           |
+            // LastExpList    |           |
+            //     |          |           |
+            //   NumExp     NumExp      NumExp
+            //     |          |           |
+            //     1          2           3
+            //
+            // print((print(1), 2)) ; print(3)
+            //
+            CompoundStatement example3 = new CompoundStatement(
+                new PrintStatement(new LastExpressionList(new SeqExpression(
+                    new PrintStatement(new LastExpressionList(new NumExpression(1))), new NumExpression(2)))),
+                new PrintStatement(new LastExpressionList(new NumExpression(3))));
+            Console.WriteLine(example3);
+
+            Console.WriteLine("\nPress any key to quit...");
+            Console.ReadKey(true);
         }
     }
 }
