@@ -1,53 +1,68 @@
-﻿
-using System.Diagnostics;
-
-namespace TigerCompiler
+﻿namespace TigerCompiler
 {
     using System;
     using System.Collections.Generic;
 
-    // Grammar for the language.
-    //
-    // Statement -> Statement ; Statement               (CompoundStatement)
-    // Statement -> id := Expression                    (AssignStatement)
-    // Statement -> print (ExpressionList)              (PrintStatement)
-    // Expression -> id                                 (IdExpression)
-    // Expression -> num                                (NumExpression)
-    // Expression -> Expression BinOp Expression        (OpExpression)
-    // Expression -> (Statement, Expression)            (SeqExpression)
-    // ExpressionList -> Expression, ExpressionList     (PairExpressionList)
-    // ExpressionList -> Expression                     (LastExpressionList)
-    // BinOp -> +                                       (Plus)
-    // BinOp -> -                                       (Minus)
-    // BinOp -> x                                       (Times)
-    // BinOp -> /                                       (Divide)
-
-    // Tree-like Structure.
-    //
-    // ------------------------------------- [ Statements ] -------------------------------------------
-    // 
-    //           CompoundStatement         AssignStatement          PrintStatement
-    //             /            \                 |                        |
-    //        Statement      Statement        Expression            ExpressionList
-    //
-    //
-    // ------------------------------------- [ Expresssions ] -----------------------------------------
-    //
-    //           OpExpression             SeqExpression         IdExpression      NumExpression
-    //            /        \               /         \                |                 | 
-    //      Expression  Expression    Statement  Expression        string              int
-    //
-    // 
-    // ------------------------------------- [ ExpressionList ] ---------------------------------------
-    //
-    //           PairExpressionList      LastExpressionList
-    //              /          \                 |
-    //        Expression  ExpressionList     Expression
-    //
-    //-------------------------------------------------------------------------------------------------
     class Program
     {
         static void Main(string[] args)
+        {
+            Lexer lexer = new Lexer("blah 123 abc ab1234 123ab");
+            lexer.Tokenize();
+
+            Console.WriteLine("\nPress any key to quit...");
+            Console.ReadKey(true);
+        }
+
+
+
+
+
+
+
+
+
+
+        // Grammar for the language.
+        //
+        // Statement -> Statement ; Statement               (CompoundStatement)
+        // Statement -> id := Expression                    (AssignStatement)
+        // Statement -> print (ExpressionList)              (PrintStatement)
+        // Expression -> id                                 (IdExpression)
+        // Expression -> num                                (NumExpression)
+        // Expression -> Expression BinOp Expression        (OpExpression)
+        // Expression -> (Statement, Expression)            (SeqExpression)
+        // ExpressionList -> Expression, ExpressionList     (PairExpressionList)
+        // ExpressionList -> Expression                     (LastExpressionList)
+        // BinOp -> +                                       (Plus)
+        // BinOp -> -                                       (Minus)
+        // BinOp -> x                                       (Times)
+        // BinOp -> /                                       (Divide)
+
+        // Tree-like Structure.
+        //
+        // ------------------------------------- [ Statements ] -------------------------------------------
+        // 
+        //           CompoundStatement         AssignStatement          PrintStatement
+        //             /            \                 |                        |
+        //        Statement      Statement        Expression            ExpressionList
+        //
+        //
+        // ------------------------------------- [ Expresssions ] -----------------------------------------
+        //
+        //           OpExpression             SeqExpression         IdExpression      NumExpression
+        //            /        \               /         \                |                 | 
+        //      Expression  Expression    Statement  Expression        string              int
+        //
+        // 
+        // ------------------------------------- [ ExpressionList ] ---------------------------------------
+        //
+        //           PairExpressionList      LastExpressionList
+        //              /          \                 |
+        //        Expression  ExpressionList     Expression
+        //
+        //-------------------------------------------------------------------------------------------------
+        public static void SLP()
         {
             // Example 1:
             //
@@ -72,9 +87,9 @@ namespace TigerCompiler
 
             // The idea behind the stack is as follows.
             // If we encounter a PrintStatement:
-                // Pop the value on top of stack if it exists and increment it.
-                // Push that value back on the stack.
-                // Push a new count of 0 on top of stack.
+            // Pop the value on top of stack if it exists and increment it.
+            // Push that value back on the stack.
+            // Push a new count of 0 on top of stack.
             // If we encounter a leaf node, we increment the value on top of stack if it exists.
 
             int maxCount = 0;
@@ -148,8 +163,8 @@ namespace TigerCompiler
                     new AssignStatement(
                         "a",
                         new OpExpression(
-                            new NumExpression(5), 
-                            BinOp.Plus, 
+                            new NumExpression(5),
+                            BinOp.Plus,
                             new NumExpression(3)
                         )
                     ),
