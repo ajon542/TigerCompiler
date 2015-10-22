@@ -8,7 +8,8 @@ namespace TigerCompiler
     {
         Unknown,
         Id,
-        Num
+        Num, 
+        Eof
     }
 
     class Scanner
@@ -67,6 +68,19 @@ namespace TigerCompiler
             return sb.ToString();
         }
 
+        private string ReadNumber()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            while (Char.IsDigit(scanner.Char))
+            {
+                sb.Append(scanner.Char);
+                scanner.Next();
+            }
+
+            return sb.ToString();
+        }
+
         private Token Scan()
         {
             Token token = Token.Unknown;
@@ -79,12 +93,19 @@ namespace TigerCompiler
                 Console.WriteLine("ID({0})", identifier);
                 token = Token.Id;
             }
-            /*else if (Char.IsDigit(input[position]))
+            else if (Char.IsDigit(scanner.Char))
             {
-                string number = ReadNumber(input, ref position);
+                string number = ReadNumber();
                 Console.WriteLine("NUM({0})", number);
                 token = Token.Num;
-            }*/
+            }
+            else
+            {
+                if (scanner.Char == '\0')
+                {
+                    token = Token.Eof;
+                }
+            }
 
             return token;
         }
@@ -92,6 +113,11 @@ namespace TigerCompiler
         public void Tokenize()
         {
             Token token = Scan();
+
+            while (token != Token.Unknown && token != Token.Eof)
+            {
+                token = Scan();
+            }
         }
     }
 }
