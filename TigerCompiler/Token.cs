@@ -1,7 +1,6 @@
 ﻿
 namespace TigerCompiler
 {
-    using System.Collections.Generic;
     using System.Text;
 
     enum TokenType
@@ -17,11 +16,14 @@ namespace TigerCompiler
         Comma,
         Semicolon,
 
+        // Keywords
         If,
-        Else,
-        Then
+        Else
     }
 
+    /// <summary>
+    /// A token is an abstract symbol representing a kind of lexical unit.
+    /// </summary>
     class Token
     {
         /// <summary>

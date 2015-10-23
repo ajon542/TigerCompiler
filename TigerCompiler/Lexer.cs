@@ -2,20 +2,55 @@
 namespace TigerCompiler
 {
     using System;
-    using System.Text;
 
+    /// <summary>
+    /// Error EventArgs class.
+    /// </summary>
+    class ErrorEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Gets or sets the token that generated the error.
+        /// </summary>
+        public Token Token { get; set; }
+
+        /// <summary>
+        /// Gets or sets the line number the error occurred on.
+        /// </summary>
+        public int Line { get; set; }
+
+        /// <summary>
+        /// Gets or sets the offset into the line the error occurred on.
+        /// </summary>
+        public int LineOffset { get; set; }
+    }
+
+    /// <summary>
+    /// A lexer will take an input string and convert it into tokens.
+    /// </summary>
     class Lexer
     {
+        public EventHandler<ErrorEventArgs> ErrorEventHandler { get; set; }
+
+        /// <summary>
+        /// Scanner for the input string.
+        /// </summary>
         private Scanner scanner;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Lexer"/> class.
+        /// </summary>
+        /// <param name="input"></param>
         public Lexer(string input)
         {
             scanner = new Scanner(input);
         }
 
-        private void GetToken(out Token token)
+        /// <summary>
+        /// Get the next token from the input string.
+        /// </summary>
+        private Token GetToken()
         {
-            token = new Token(TokenType.Unknown);
+            Token token;
 
             scanner.ConsumeWhiteSpace();
 
@@ -24,17 +59,13 @@ namespace TigerCompiler
                 string id = scanner.ReadIdentifier();
 
                 // TODO: Handle keywords a little better.
-                if(id == "if")
+                if (id == "if")
                 {
                     token = new Token(TokenType.If);
                 }
                 else if (id == "else")
                 {
                     token = new Token(TokenType.Else);
-                }
-                else if (id == "then")
-                {
-                    token = new Token(TokenType.Then);
                 }
                 else
                 {
@@ -47,53 +78,66 @@ namespace TigerCompiler
             }
             else
             {
-                if (scanner.Ch == '\0')
+                switch (scanner.Ch)
                 {
-                    token = new Token(TokenType.Eof);
-                }
-                else if (scanner.Ch == '{')
-                {
-                    token = new Token(TokenType.LBrace);
-                }
-                else if (scanner.Ch == '}')
-                {
-                    token = new Token(TokenType.RBrace);
-                }
-                else if (scanner.Ch == '(')
-                {
-                    token = new Token(TokenType.LParen);
-                }
-                else if (scanner.Ch == ')')
-                {
-                    token = new Token(TokenType.RParen);
-                }
-                else if (scanner.Ch == ',')
-                {
-                    token = new Token(TokenType.Comma);
-                }
-                else if (scanner.Ch == ';')
-                {
-                    token = new Token(TokenType.Semicolon);
-                }
-                else
-                {
-                    Console.WriteLine("Unknown token {0} at line: {1}, position: {2}", scanner.Ch, scanner.Line, scanner.LineOffset);
+                    case '\0':
+                        token = new Token(TokenType.Eof);
+                        break;
+                    case '{':
+                        token = new Token(TokenType.LBrace);
+                        break;
+                    case '}':
+                        token = new Token(TokenType.RBrace);
+                        break;
+                    case '(':
+                        token = new Token(TokenType.LParen);
+                        break;
+                    case ')':
+                        token = new Token(TokenType.RParen);
+                        break;
+                    case ',':
+                        token = new Token(TokenType.Comma);
+                        break;
+                    case ';':
+                        token = new Token(TokenType.Semicolon);
+                        break;
+                    default:
+
+                        token = new Token(TokenType.Unknown);
+
+                        EventHandler<ErrorEventArgs> handler = ErrorEventHandler;
+
+                        if (handler != null)
+                        {
+                            handler(this, new ErrorEventArgs
+                            {
+                                Token = token,
+                                Line = scanner.Line,
+                                LineOffset = scanner.LineOffset
+                            });
+                        }
+
+                        break;
                 }
 
                 scanner.Next();
             }
 
             Console.WriteLine(token);
+
+            return token;
         }
 
+        /// <summary>
+        /// Generate all the tokens for the input string.
+        /// </summary>
         public void Tokenize()
         {
-            Token token;
-            GetToken(out token);
+            Token token = GetToken();
 
-            while (token.Type != TokenType.Eof)
+            while (token != null && token.Type != TokenType.Eof)
             {
-                GetToken(out token);
+                token = GetToken();
             }
         }
     }
