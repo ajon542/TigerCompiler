@@ -43,26 +43,69 @@ namespace TigerCompiler
 
     class Scanner
     {
+        private int inputIndex;
         private readonly string input;
-        public int Position { get; private set; }
-        public char Char { get; private set; }
+        public int Line { get; private set; }
+        public int LineOffset { get; private set; }
+        public char Ch { get; private set; }
 
         public Scanner(string input)
         {
             this.input = input;
-            Char = ' '; // Default to whitespace, it will be consumed on a scan.
+            Ch = ' '; // Default to whitespace, it will be consumed on a scan.
         }
 
         public void Next()
         {
-            if (Position < input.Length)
+            if (inputIndex < input.Length)
             {
-                Char = input[Position++];
+                Ch = input[inputIndex++];
+                LineOffset++;
             }
             else
             {
-                Char = '\0';
+                Ch = '\0';
             }
+
+            if(Ch == '\n')
+            {
+                LineOffset = 0;
+                Line++;
+            }
+        }
+
+        public void ConsumeWhiteSpace()
+        {
+            while (Char.IsWhiteSpace(Ch))
+            {
+                Next();
+            }
+        }
+
+        public string ReadIdentifier()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            while (Char.IsLetterOrDigit(Ch))
+            {
+                sb.Append(Ch);
+                Next();
+            }
+
+            return sb.ToString();
+        }
+
+        public string ReadNumber()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            while (Char.IsDigit(Ch))
+            {
+                sb.Append(Ch);
+                Next();
+            }
+
+            return sb.ToString();
         }
     }
 
@@ -75,98 +118,65 @@ namespace TigerCompiler
             scanner = new Scanner(input);
         }
 
-        private void ConsumeWhiteSpace()
-        {
-            while (Char.IsWhiteSpace(scanner.Char))
-            {
-                scanner.Next();
-            }
-        }
-
-        private string ReadIdentifier()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            while (Char.IsLetterOrDigit(scanner.Char))
-            {
-                sb.Append(scanner.Char);
-                scanner.Next();
-            }
-
-            return sb.ToString();
-        }
-
-        private string ReadNumber()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            while (Char.IsDigit(scanner.Char))
-            {
-                sb.Append(scanner.Char);
-                scanner.Next();
-            }
-
-            return sb.ToString();
-        }
-
         private void Scan(out Token token)
         {
             token = new Token(TokenType.Unknown);
 
-            ConsumeWhiteSpace();
+            scanner.ConsumeWhiteSpace();
 
-            if (Char.IsLetter(scanner.Char))
+            if (Char.IsLetter(scanner.Ch))
             {
-                token = new Token(TokenType.Id, ReadIdentifier());
+                token = new Token(TokenType.Id, scanner.ReadIdentifier());
             }
-            else if (Char.IsDigit(scanner.Char))
+            else if (Char.IsDigit(scanner.Ch))
             {
-                token = new Token(TokenType.Num, ReadNumber());
+                token = new Token(TokenType.Num, scanner.ReadNumber());
             }
             else
             {
-                if (scanner.Char == '\0')
+                if (scanner.Ch == '\0')
                 {
                     token = new Token(TokenType.Eof);
                 }
-                else if (scanner.Char == '{')
+                else if (scanner.Ch == '{')
                 {
                     token = new Token(TokenType.LBrace);
                 }
-                else if (scanner.Char == '}')
+                else if (scanner.Ch == '}')
                 {
                     token = new Token(TokenType.RBrace);
                 }
-                else if (scanner.Char == '(')
+                else if (scanner.Ch == '(')
                 {
                     token = new Token(TokenType.LParen);
                 }
-                else if (scanner.Char == ')')
+                else if (scanner.Ch == ')')
                 {
                     token = new Token(TokenType.RParen);
                 }
-                else if (scanner.Char == ',')
+                else if (scanner.Ch == ',')
                 {
                     token = new Token(TokenType.Comma);
                 }
                 else
                 {
-                    Console.WriteLine("Unknown token {0} at position {1}", scanner.Char, scanner.Position);
+                    Console.WriteLine("Unknown token {0} at line: {1}, position: {2}", scanner.Ch, scanner.Line, scanner.LineOffset);
                 }
+
                 scanner.Next();
             }
+
+            Console.WriteLine(token);
         }
 
         public void Tokenize()
         {
             Token token;
             Scan(out token);
-            Console.WriteLine(token);
 
             while (token.Type != TokenType.Eof)
             {
                 Scan(out token);
-                Console.WriteLine(token);
             }
         }
     }

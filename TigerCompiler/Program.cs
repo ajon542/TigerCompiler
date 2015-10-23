@@ -7,7 +7,7 @@
     {
         static void Main(string[] args)
         {
-            Lexer lexer = new Lexer("blah ** (123) {abc   } ab1234 123ab\n andrew jones");
+            Lexer lexer = new Lexer("blah *\n * (123) {abc   } ab1234 123ab\n andrew jones");
             lexer.Tokenize();
 
             Console.WriteLine("\nPress any key to quit...");
