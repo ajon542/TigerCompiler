@@ -53,5 +53,87 @@ namespace UnitTests
                 Assert.Fail("The lexer should generate the correct token.");
             }
         }
+
+        /// <summary>
+        /// The lexer should generate the correct identifier token.
+        /// </summary>
+        [TestMethod]
+        public void TestIdToken1()
+        {
+            Lexer lexer = new Lexer("abc");
+            List<Token> tokens = lexer.Tokenize();
+            if (tokens[0].Type != TokenType.Id || tokens[0].Value != "abc")
+            {
+                Assert.Fail("The lexer should generate the correct Id token.");
+            }
+        }
+
+        /// <summary>
+        /// The lexer should generate the correct identifier token.
+        /// </summary>
+        [TestMethod]
+        public void TestIdToken2()
+        {
+            Lexer lexer = new Lexer("abc123");
+            List<Token> tokens = lexer.Tokenize();
+            if (tokens[0].Type != TokenType.Id || tokens[0].Value != "abc123")
+            {
+                Assert.Fail("The lexer should generate the correct Id token.");
+            }
+        }
+
+        /// <summary>
+        /// The lexer should generate the correct number token.
+        /// </summary>
+        [TestMethod]
+        public void TestNumToken1()
+        {
+            Lexer lexer = new Lexer("123");
+            List<Token> tokens = lexer.Tokenize();
+            if (tokens[0].Type != TokenType.Num || tokens[0].Value != "123")
+            {
+                Assert.Fail("The lexer should generate the correct Num token.");
+            }
+        }
+
+        /// <summary>
+        /// The lexer should generate the correct number token.
+        /// </summary>
+        [TestMethod]
+        public void TestNumToken2()
+        {
+            Lexer lexer = new Lexer("123abc");
+            List<Token> tokens = lexer.Tokenize();
+            if (tokens[0].Type != TokenType.Num || tokens[0].Value != "123")
+            {
+                Assert.Fail("The lexer should generate the correct Num token.");
+            }
+
+            if (tokens[1].Type != TokenType.Id || tokens[1].Value != "abc")
+            {
+                Assert.Fail("The lexer should generate the correct Id token.");
+            }
+        }
+
+        /// <summary>
+        /// The lexer should generate the correct number token.
+        /// </summary>
+        [TestMethod]
+        public void TestIdAndParentheses()
+        {
+            Lexer lexer = new Lexer("print()");
+            List<Token> tokens = lexer.Tokenize();
+
+            if (tokens[0].Type != TokenType.Id || tokens[0].Value != "print")
+            {
+                Assert.Fail("The lexer should generate the correct Id token.");
+            }
+
+            if (tokens[1].Type != TokenType.LParen ||
+                tokens[2].Type != TokenType.RParen)
+            {
+                Assert.Fail("The lexer should generate the correct LParen and RParen token.");
+            }
+        }
     }
 }
