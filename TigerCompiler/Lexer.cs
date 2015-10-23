@@ -4,111 +4,6 @@ namespace TigerCompiler
     using System;
     using System.Text;
 
-    enum TokenType
-    {
-        Unknown,
-        Id,
-        Num, 
-        Eof,
-        LBrace,
-        RBrace,
-        LParen,
-        RParen,
-        Comma
-    }
-
-    class Token
-    {
-        public TokenType Type { get; private set; }
-        public string Value { get; private set; }
-
-        public Token(TokenType type, string value = "")
-        {
-            Type = type;
-            Value = value;
-        }
-
-        public override string ToString()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendFormat("{0}", Type);
-            if(Value != string.Empty)
-            {
-                sb.AppendFormat("({0})", Value);
-            }
-
-            return sb.ToString();
-        }
-    }
-
-    class Scanner
-    {
-        private int inputIndex;
-        private readonly string input;
-        public int Line { get; private set; }
-        public int LineOffset { get; private set; }
-        public char Ch { get; private set; }
-
-        public Scanner(string input)
-        {
-            this.input = input;
-            Ch = ' '; // Default to whitespace, it will be consumed on a scan.
-        }
-
-        public void Next()
-        {
-            if (inputIndex < input.Length)
-            {
-                Ch = input[inputIndex++];
-                LineOffset++;
-            }
-            else
-            {
-                Ch = '\0';
-            }
-
-            if(Ch == '\n')
-            {
-                LineOffset = 0;
-                Line++;
-            }
-        }
-
-        public void ConsumeWhiteSpace()
-        {
-            while (Char.IsWhiteSpace(Ch))
-            {
-                Next();
-            }
-        }
-
-        public string ReadIdentifier()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            while (Char.IsLetterOrDigit(Ch))
-            {
-                sb.Append(Ch);
-                Next();
-            }
-
-            return sb.ToString();
-        }
-
-        public string ReadNumber()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            while (Char.IsDigit(Ch))
-            {
-                sb.Append(Ch);
-                Next();
-            }
-
-            return sb.ToString();
-        }
-    }
-
     class Lexer
     {
         private Scanner scanner;
@@ -118,7 +13,7 @@ namespace TigerCompiler
             scanner = new Scanner(input);
         }
 
-        private void Scan(out Token token)
+        private void GetToken(out Token token)
         {
             token = new Token(TokenType.Unknown);
 
@@ -158,6 +53,10 @@ namespace TigerCompiler
                 {
                     token = new Token(TokenType.Comma);
                 }
+                else if (scanner.Ch == ';')
+                {
+                    token = new Token(TokenType.Semicolon);
+                }
                 else
                 {
                     Console.WriteLine("Unknown token {0} at line: {1}, position: {2}", scanner.Ch, scanner.Line, scanner.LineOffset);
@@ -172,11 +71,11 @@ namespace TigerCompiler
         public void Tokenize()
         {
             Token token;
-            Scan(out token);
+            GetToken(out token);
 
             while (token.Type != TokenType.Eof)
             {
-                Scan(out token);
+                GetToken(out token);
             }
         }
     }
