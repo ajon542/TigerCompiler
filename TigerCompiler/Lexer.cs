@@ -4,19 +4,47 @@ namespace TigerCompiler
     using System;
     using System.Text;
 
-    enum Token
+    enum TokenType
     {
         Unknown,
         Id,
         Num, 
-        Eof
+        Eof,
+        LBrace,
+        RBrace,
+        LParen,
+        RParen,
+        Comma
+    }
+
+    class Token
+    {
+        public TokenType Type { get; private set; }
+        public string Value { get; private set; }
+
+        public Token(TokenType type, string value = "")
+        {
+            Type = type;
+            Value = value;
+        }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("{0}", Type);
+            if(Value != string.Empty)
+            {
+                sb.AppendFormat("({0})", Value);
+            }
+
+            return sb.ToString();
+        }
     }
 
     class Scanner
     {
         private readonly string input;
-        private int position;
-
+        public int Position { get; private set; }
         public char Char { get; private set; }
 
         public Scanner(string input)
@@ -27,9 +55,9 @@ namespace TigerCompiler
 
         public void Next()
         {
-            if (position < input.Length)
+            if (Position < input.Length)
             {
-                Char = input[position++];
+                Char = input[Position++];
             }
             else
             {
@@ -81,42 +109,64 @@ namespace TigerCompiler
             return sb.ToString();
         }
 
-        private Token Scan()
+        private void Scan(out Token token)
         {
-            Token token = Token.Unknown;
+            token = new Token(TokenType.Unknown);
 
             ConsumeWhiteSpace();
 
             if (Char.IsLetter(scanner.Char))
             {
-                string identifier = ReadIdentifier();
-                Console.WriteLine("ID({0})", identifier);
-                token = Token.Id;
+                token = new Token(TokenType.Id, ReadIdentifier());
             }
             else if (Char.IsDigit(scanner.Char))
             {
-                string number = ReadNumber();
-                Console.WriteLine("NUM({0})", number);
-                token = Token.Num;
+                token = new Token(TokenType.Num, ReadNumber());
             }
             else
             {
                 if (scanner.Char == '\0')
                 {
-                    token = Token.Eof;
+                    token = new Token(TokenType.Eof);
                 }
+                else if (scanner.Char == '{')
+                {
+                    token = new Token(TokenType.LBrace);
+                }
+                else if (scanner.Char == '}')
+                {
+                    token = new Token(TokenType.RBrace);
+                }
+                else if (scanner.Char == '(')
+                {
+                    token = new Token(TokenType.LParen);
+                }
+                else if (scanner.Char == ')')
+                {
+                    token = new Token(TokenType.RParen);
+                }
+                else if (scanner.Char == ',')
+                {
+                    token = new Token(TokenType.Comma);
+                }
+                else
+                {
+                    Console.WriteLine("Unknown token {0} at position {1}", scanner.Char, scanner.Position);
+                }
+                scanner.Next();
             }
-
-            return token;
         }
 
         public void Tokenize()
         {
-            Token token = Scan();
+            Token token;
+            Scan(out token);
+            Console.WriteLine(token);
 
-            while (token != Token.Unknown && token != Token.Eof)
+            while (token.Type != TokenType.Eof)
             {
-                token = Scan();
+                Scan(out token);
+                Console.WriteLine(token);
             }
         }
     }
