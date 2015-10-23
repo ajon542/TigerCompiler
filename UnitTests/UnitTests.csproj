@@ -53,6 +53,12 @@
     <Compile Include="LexerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TigerCompiler\TigerCompiler.csproj">
+      <Project>{6f72f2f5-5f8b-458a-8ccd-c6cf2b65e7bd}</Project>
+      <Name>TigerCompiler</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>
