@@ -1,7 +1,6 @@
 ﻿
 namespace UnitTests
 {
-    using System;
     using System.Collections.Generic;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TigerCompiler;
@@ -18,10 +17,8 @@ namespace UnitTests
             Lexer lexer = new Lexer("");
             List<Token> tokens = lexer.Tokenize();
 
-            if (tokens.Count != 1 || tokens[0].Type != TokenType.Eof)
-            {
-                Assert.Fail("The lexer should generate a single end-of-file token for an empty string.");
-            }
+            CheckTokens(tokens,
+                TokenType.Eof);
         }
 
         /// <summary>
@@ -33,25 +30,18 @@ namespace UnitTests
             Lexer lexer = new Lexer("abc 123 { } ( ) , ; if else");
             List<Token> tokens = lexer.Tokenize();
 
-            if (tokens.Count != 11)
-            {
-                Assert.Fail("The lexer should generate all the tokens.");
-            }
-
-            if (tokens[0].Type != TokenType.Id ||
-                tokens[1].Type != TokenType.Num ||
-                tokens[2].Type != TokenType.LBrace ||
-                tokens[3].Type != TokenType.RBrace ||
-                tokens[4].Type != TokenType.LParen ||
-                tokens[5].Type != TokenType.RParen ||
-                tokens[6].Type != TokenType.Comma ||
-                tokens[7].Type != TokenType.Semicolon ||
-                tokens[8].Type != TokenType.If ||
-                tokens[9].Type != TokenType.Else ||
-                tokens[10].Type != TokenType.Eof)
-            {
-                Assert.Fail("The lexer should generate the correct token.");
-            }
+            CheckTokens(tokens,
+                TokenType.Id,
+                TokenType.Num,
+                TokenType.LBrace,
+                TokenType.RBrace,
+                TokenType.LParen,
+                TokenType.RParen,
+                TokenType.Comma,
+                TokenType.Semicolon,
+                TokenType.If,
+                TokenType.Else,
+                TokenType.Eof);
         }
 
         /// <summary>
@@ -62,9 +52,14 @@ namespace UnitTests
         {
             Lexer lexer = new Lexer("abc");
             List<Token> tokens = lexer.Tokenize();
-            if (tokens[0].Type != TokenType.Id || tokens[0].Value != "abc")
+
+            CheckTokens(tokens,
+                TokenType.Id,
+                TokenType.Eof);
+
+            if (tokens[0].Value != "abc")
             {
-                Assert.Fail("The lexer should generate the correct Id token.");
+                Assert.Fail("The lexer should generate the correct token value.");
             }
         }
 
@@ -76,9 +71,14 @@ namespace UnitTests
         {
             Lexer lexer = new Lexer("abc123");
             List<Token> tokens = lexer.Tokenize();
-            if (tokens[0].Type != TokenType.Id || tokens[0].Value != "abc123")
+
+            CheckTokens(tokens,
+                TokenType.Id,
+                TokenType.Eof);
+
+            if (tokens[0].Value != "abc123")
             {
-                Assert.Fail("The lexer should generate the correct Id token.");
+                Assert.Fail("The lexer should generate the correct token value.");
             }
         }
 
@@ -90,9 +90,14 @@ namespace UnitTests
         {
             Lexer lexer = new Lexer("123");
             List<Token> tokens = lexer.Tokenize();
-            if (tokens[0].Type != TokenType.Num || tokens[0].Value != "123")
+
+            CheckTokens(tokens,
+                TokenType.Num,
+                TokenType.Eof);
+
+            if (tokens[0].Value != "123")
             {
-                Assert.Fail("The lexer should generate the correct Num token.");
+                Assert.Fail("The lexer should generate the correct token value.");
             }
         }
 
@@ -104,14 +109,20 @@ namespace UnitTests
         {
             Lexer lexer = new Lexer("123abc");
             List<Token> tokens = lexer.Tokenize();
-            if (tokens[0].Type != TokenType.Num || tokens[0].Value != "123")
+
+            CheckTokens(tokens,
+                TokenType.Num,
+                TokenType.Id,
+                TokenType.Eof);
+
+            if (tokens[0].Value != "123")
             {
-                Assert.Fail("The lexer should generate the correct Num token.");
+                Assert.Fail("The lexer should generate the correct token value.");
             }
 
-            if (tokens[1].Type != TokenType.Id || tokens[1].Value != "abc")
+            if (tokens[1].Value != "abc")
             {
-                Assert.Fail("The lexer should generate the correct Id token.");
+                Assert.Fail("The lexer should generate the correct token value.");
             }
         }
 
@@ -124,15 +135,49 @@ namespace UnitTests
             Lexer lexer = new Lexer("print()");
             List<Token> tokens = lexer.Tokenize();
 
-            if (tokens[0].Type != TokenType.Id || tokens[0].Value != "print")
+            CheckTokens(tokens,
+                TokenType.Id,
+                TokenType.LParen,
+                TokenType.RParen,
+                TokenType.Eof);
+
+            if (tokens[0].Value != "print")
             {
-                Assert.Fail("The lexer should generate the correct Id token.");
+                Assert.Fail("The lexer should generate the correct token value.");
+            }
+        }
+
+        /// <summary>
+        /// The lexer should generate the correct tokens for "if(){}".
+        /// </summary>
+        [TestMethod]
+        public void TestIfAndParentheses()
+        {
+            Lexer lexer = new Lexer("\n    \nif  \n\n(\n \n)  \n\n{    \n }");
+            List<Token> tokens = lexer.Tokenize();
+
+            CheckTokens(tokens, 
+                TokenType.If, 
+                TokenType.LParen, 
+                TokenType.RParen, 
+                TokenType.LBrace, 
+                TokenType.RBrace, 
+                TokenType.Eof);
+        }
+
+        private void CheckTokens(List<Token> tokens, params TokenType[] expectedTokenTypes)
+        {
+            if (tokens.Count != expectedTokenTypes.Length)
+            {
+                Assert.Fail("The lexer should generate all the tokens.");
             }
 
-            if (tokens[1].Type != TokenType.LParen ||
-                tokens[2].Type != TokenType.RParen)
+            for (int i = 0; i < tokens.Count; ++i)
             {
-                Assert.Fail("The lexer should generate the correct LParen and RParen token.");
+                if (tokens[i].Type != expectedTokenTypes[i])
+                {
+                    Assert.Fail("The lexer should generate the correct tokens.");
+                }
             }
         }
     }
