@@ -21,7 +21,25 @@ namespace TigerCompiler
 
             if (Char.IsLetter(scanner.Ch))
             {
-                token = new Token(TokenType.Id, scanner.ReadIdentifier());
+                string id = scanner.ReadIdentifier();
+
+                // TODO: Handle keywords a little better.
+                if(id == "if")
+                {
+                    token = new Token(TokenType.If);
+                }
+                else if (id == "else")
+                {
+                    token = new Token(TokenType.Else);
+                }
+                else if (id == "then")
+                {
+                    token = new Token(TokenType.Then);
+                }
+                else
+                {
+                    token = new Token(TokenType.Id, id);
+                }
             }
             else if (Char.IsDigit(scanner.Ch))
             {
