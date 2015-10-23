@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace TigerCompiler
 {
     using System;
@@ -123,22 +125,25 @@ namespace TigerCompiler
                 scanner.Next();
             }
 
-            Console.WriteLine(token);
-
             return token;
         }
 
         /// <summary>
         /// Generate all the tokens for the input string.
         /// </summary>
-        public void Tokenize()
+        public List<Token> Tokenize()
         {
+            List<Token> tokens = new List<Token>();
             Token token = GetToken();
+            tokens.Add(token);
 
-            while (token != null && token.Type != TokenType.Eof)
+            while (token.Type != TokenType.Eof)
             {
                 token = GetToken();
+                tokens.Add(token);
             }
+
+            return tokens;
         }
     }
 }

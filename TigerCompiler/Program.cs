@@ -1,6 +1,8 @@
-﻿namespace TigerCompiler
+﻿
+namespace TigerCompiler
 {
     using System;
+    using System.Collections.Generic;
 
     class Program
     {
@@ -14,7 +16,7 @@
             Lexer lexer = new Lexer("if then else blah *\n * (123) {abc   } ab1234 123ab\n andrew jones");
             lexer.ErrorEventHandler += ErrorHandler;
 
-            lexer.Tokenize();
+            List<Token> tokens = lexer.Tokenize();
 
             Console.WriteLine("\nPress any key to quit...");
             Console.ReadKey(true);
