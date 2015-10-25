@@ -16,6 +16,11 @@ namespace TigerCompiler
         Comma,
         Semicolon,
 
+        Plus,
+        Minus,
+        Multiply,
+
+
         // Keywords
         If,
         Else
