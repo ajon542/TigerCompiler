@@ -6,8 +6,8 @@
     class Parser
     {
         // Example Grammar
-        // E -> T
         // E -> T + E
+        // E -> T
         // T -> id
         // T -> id * T
         // T -> (E)
@@ -35,14 +35,14 @@
 
         private bool E1()
         {
-            return T();
+            return T() &&
+                   IsToken(TokenType.Plus) &&
+                   E();
         }
 
         private bool E2()
         {
-            return T() &&
-                   IsToken(TokenType.Plus) &&
-                   E();
+            return T();
         }
 
         private bool T()
@@ -96,12 +96,20 @@
             }
         }
 
-
-        public Parser()
+        public bool Parse(List<Token> tokens)
         {
-            tokens = new List<Token> { new Token(TokenType.LParen), new Token(TokenType.Id), new Token(TokenType.RParen) };
+            next = 0;
+            bool result = true;
+            this.tokens = tokens;
 
-            bool accept = E();
+            // Parse the entire input.
+            // TODO: Error checking.
+            while(next != tokens.Count)
+            {
+                result &= E();
+            }
+
+            return result;
         }
     }
 }

@@ -19,6 +19,9 @@ namespace TigerCompiler
             List<Token> tokens = lexer.Tokenize();
 
             Parser parser = new Parser();
+            //tokens = new List<Token> { new Token(TokenType.LParen), new Token(TokenType.Id), new Token(TokenType.RParen) };
+            tokens = new List<Token> { new Token(TokenType.Id), new Token(TokenType.Id), new Token(TokenType.Id) };
+            Console.WriteLine(parser.Parse(tokens));
 
             Console.WriteLine("\nPress any key to quit...");
             Console.ReadKey(true);
