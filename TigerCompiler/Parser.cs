@@ -21,14 +21,41 @@
 
             if (E1())
             {
-                Console.WriteLine("E1");
+                //Console.WriteLine("E1");
                 return true;
             }
             next = save;
 
             if (E2())
             {
-                Console.WriteLine("E2");
+                //Console.WriteLine("E2");
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool T()
+        {
+            int save = next;
+
+            if (T1())
+            {
+                //Console.WriteLine("T1");
+                return true;
+            }
+            next = save;
+
+            if (T2())
+            {
+                //Console.WriteLine("T2");
+                return true;
+            }
+            next = save;
+
+            if (T3())
+            {
+                //Console.WriteLine("T3");
                 return true;
             }
 
@@ -37,72 +64,52 @@
 
         private bool E1()
         {
-            bool result = T() && IsToken(TokenType.Plus) && E();
+            // E -> T + E
+            bool result = T() && Expect(TokenType.Plus) && E();
+            Console.WriteLine("E -> T + E : " + result + ", next=" + next);
             return result;
         }
 
         private bool E2()
         {
+            // E -> T
             bool result = T();
+            Console.WriteLine("E -> T : " + result + ", next=" + next);
             return result;
-        }
-
-        private bool T()
-        {
-            int save = next;
-
-            if(T1())
-            {
-                Console.WriteLine("T1");
-                return true;
-            }
-            next = save;
-
-            if(T2())
-            {
-                Console.WriteLine("T2");
-                return true;
-            }
-            next = save;
-
-            if(T3())
-            {
-                Console.WriteLine("T3");
-                return true;
-            }
-
-            return false;
         }
 
         private bool T1()
         {
-            bool result = IsToken(TokenType.Id);
+            // T -> id
+            bool result = Expect(TokenType.Id);
+            Console.WriteLine("T -> id : " + result + ", next=" + next);
             return result;
         }
 
         private bool T2()
         {
-            bool result = IsToken(TokenType.Id) && IsToken(TokenType.Multiply) && T();
+            // T -> id * T
+            bool result = Expect(TokenType.Id) && Expect(TokenType.Multiply) && T();
+            Console.WriteLine("T -> id * T : " + result + ", next=" + next);
             return result;
         }
 
         private bool T3()
         {
-            bool result = IsToken(TokenType.LParen) && E() && IsToken(TokenType.RParen);
+            // T -> (E)
+            bool result = Expect(TokenType.LParen) && E() && Expect(TokenType.RParen);
+            Console.WriteLine("T -> (E) : " + result + ", next=" + next);
             return result;
         }
 
-        private bool IsToken(TokenType tokenType)
+        private bool Expect(TokenType tokenType)
         {
             if (next < tokens.Count)
             {
                 bool result = tokenType == tokens[next++].Type;
                 return result;
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
 
         public bool Parse(List<Token> tokens)

@@ -20,7 +20,7 @@ namespace TigerCompiler
 
             Parser parser = new Parser();
             tokens = new List<Token> { new Token(TokenType.Id), new Token(TokenType.Plus), new Token(TokenType.Id), new Token(TokenType.Multiply), new Token(TokenType.Id) };
-            //tokens = new List<Token> { new Token(TokenType.Id), new Token(TokenType.Id), new Token(TokenType.Id) };
+            //tokens = new List<Token> { new Token(TokenType.LParen), new Token(TokenType.Id), new Token(TokenType.RParen) };
             Console.WriteLine(parser.Parse(tokens));
 
             Console.WriteLine("\nPress any key to quit...");

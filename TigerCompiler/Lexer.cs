@@ -1,9 +1,8 @@
 ﻿
-using System.Collections.Generic;
-
 namespace TigerCompiler
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Error EventArgs class.
