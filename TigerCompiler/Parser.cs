@@ -21,12 +21,14 @@
 
             if (E1())
             {
+                Console.WriteLine("E1");
                 return true;
             }
             next = save;
 
             if (E2())
             {
+                Console.WriteLine("E2");
                 return true;
             }
 
@@ -35,14 +37,14 @@
 
         private bool E1()
         {
-            return T() &&
-                   IsToken(TokenType.Plus) &&
-                   E();
+            bool result = T() && IsToken(TokenType.Plus) && E();
+            return result;
         }
 
         private bool E2()
         {
-            return T();
+            bool result = T();
+            return result;
         }
 
         private bool T()
@@ -51,18 +53,21 @@
 
             if(T1())
             {
+                Console.WriteLine("T1");
                 return true;
             }
             next = save;
 
             if(T2())
             {
+                Console.WriteLine("T2");
                 return true;
             }
             next = save;
 
             if(T3())
             {
+                Console.WriteLine("T3");
                 return true;
             }
 
@@ -71,24 +76,28 @@
 
         private bool T1()
         {
-            return IsToken(TokenType.Id);
+            bool result = IsToken(TokenType.Id);
+            return result;
         }
 
         private bool T2()
         {
-            return IsToken(TokenType.Id) && IsToken(TokenType.Multiply) && T();
+            bool result = IsToken(TokenType.Id) && IsToken(TokenType.Multiply) && T();
+            return result;
         }
 
         private bool T3()
         {
-            return IsToken(TokenType.LParen) && E() && IsToken(TokenType.RParen);
+            bool result = IsToken(TokenType.LParen) && E() && IsToken(TokenType.RParen);
+            return result;
         }
 
         private bool IsToken(TokenType tokenType)
         {
             if (next < tokens.Count)
             {
-                return tokenType == tokens[next++].Type;
+                bool result = tokenType == tokens[next++].Type;
+                return result;
             }
             else
             {
