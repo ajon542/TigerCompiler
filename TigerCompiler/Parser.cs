@@ -5,6 +5,91 @@
 
     class Parser
     {
+        // Grammar
+        // E -> T + E
+        // E -> T
+        // T -> id
+
+        int next;
+        List<Token> tokens;
+
+        private bool E()
+        {
+            int save = next;
+
+            if (E1())
+            {
+                return true;
+            }
+            next = save;
+
+            if (E2())
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool T()
+        {
+            if (T1())
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool E1()
+        {
+            // E -> T + E
+            bool result = T() && Expect(TokenType.Plus) && E();
+            Console.WriteLine("E -> T + E : " + result + ", next=" + next);
+            return result;
+        }
+
+        private bool E2()
+        {
+            // E -> T
+            bool result = T();
+            Console.WriteLine("E -> T : " + result + ", next=" + next);
+            return result;
+        }
+
+        private bool T1()
+        {
+            // T -> id
+            bool result = Expect(TokenType.Id);
+            Console.WriteLine("T -> id : " + result + ", next=" + next);
+            return result;
+        }
+
+        public bool Parse(List<Token> tokens)
+        {
+            next = 0;
+            bool result = true;
+            this.tokens = tokens;
+
+            result &= E();
+            result &= Expect(TokenType.Eof);
+  
+            return result;
+        }
+
+        private bool Expect(TokenType tokenType)
+        {
+            if (next < tokens.Count)
+            {
+                bool result = tokenType == tokens[next++].Type;
+                return result;
+            }
+            return false;
+        }
+    }
+
+    class ParserWithSomeBug
+    {
         // Example Grammar
         // E -> T + E
         // E -> T
