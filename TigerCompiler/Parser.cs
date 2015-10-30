@@ -3,34 +3,156 @@
     using System;
     using System.Collections.Generic;
 
-    class Parser
+    // Grammar
+    // (epsilon = e)
+    // S -> aABC
+    // A -> a | bb
+    // B -> a | e
+    // C -> b | e
+
+    // | Symbol | First  | Follow    |
+    // | -------|--------|-----------|
+    // | S      | {a}    | {$}       |
+    // | A      | {a, b} | {a, b, $} |
+    // | B      | {a, e} | {b, $}    |
+    // | C      | {b, e} | {$}       |
+    // -------------------------------
+
+    // Parsing Table
+    //     | a         | b         | $       |
+    // ----|-----------|-----------|---------|
+    // S   | S -> aABC |           |         |
+    // A   | A -> a    | A -> bb   |         |
+    // B   | B -> a    | B -> e    | B -> e  |
+    // C   |           | C -> b    | C -> e  |
+    // --------------------------------------------------
+
+    // From the parsing table we can see there are no duplicate
+    // entries in any of the cells. This means the grammar is LL(1).
+
+    // Parser based on the parsing table generated i.e. without backtracking.
+    class PredictiveParser
     {
-        // Grammar (epsilon = e)
-        // S -> aABC
-        // A -> a | bb
-        // B -> a | e
-        // C -> b | e
+        int next;
+        List<Token> tokens;
 
-        // | Symbol | First  | Follow    |
-        // | -------|--------|-----------|
-        // | S      | {a}    | {$}       |
-        // | A      | {a, b} | {a, b, $} |
-        // | B      | {a, e} | {b, $}    |
-        // | C      | {b, e} | {$}       |
-        // -------------------------------
+        private void S()
+        {
+            Token token = Next();
 
-        // Parsing Table
-        //     | a         | b         | c        | $       |
-        // ----|-----------|-----------|----------|---------|
-        // S   | S -> aABC |           |          |         |
-        // A   | A -> a    | A -> bb   |          |         |
-        // B   | B -> a    | B -> e    |          | B -> e  |
-        // C   |           | C -> b    |          | C -> e  |
-        // --------------------------------------------------
+            if(token == null)
+            {
+                Console.WriteLine("Error: token list is empty");
+                return;
+            }
 
-        // From the parsing table we can see there are no duplicate
-        // entries in any of the cells. This means the grammar is LL(1).
+            switch(token.Type)
+            {
+                case TokenType.A:
+                    A(); B(); C();
+                    break;
+                default:
+                    Console.WriteLine("Syntax error: expected TokenType.A, got {0}", token.Type);
+                    break;
+            }
+        }
 
+        private void A()
+        {
+            Token token = Next();
+
+            switch (token.Type)
+            {
+                case TokenType.A:
+                    break;
+                case TokenType.B:
+                    token = Next();
+                    if(token == null)
+                    {
+                        Console.WriteLine("Syntax error: expected TokenType.B, no more tokens to parse");
+                    }
+                    else if(token.Type != TokenType.B)
+                    {
+                        Console.WriteLine("Syntax error: expected TokenType.B, got {0}", token.Type);
+                    }
+
+                    break;
+                default:
+                    Console.WriteLine("Syntax error: expected TokenType.A or TokenType.B, got {0}", token.Type);
+                    break;
+            }
+        }
+
+        private void B()
+        {
+            // When the value can go to epsilon, we need a way of not consuming the Token.
+            int save = next;
+
+            Token token = Next();
+
+            switch (token.Type)
+            {
+                case TokenType.A:
+                    break;
+                case TokenType.B:
+                    // Epsilon transition.
+                    next = save;
+                    break;
+                case TokenType.Eof:
+                    // Epsilon transition.
+                    next = save;
+                    break;
+                default:
+                    Console.WriteLine("Syntax error: expected TokenType.A or TokenType.B, got {0}", token.Type);
+                    break;
+            }
+        }
+
+        private void C()
+        {
+            // When the value can go to epsilon, we need a way of not consuming the Token.
+            int save = next;
+
+            Token token = Next();
+
+            switch (token.Type)
+            {
+                case TokenType.B:
+                    break;
+                case TokenType.Eof:
+                    // Epsilon transition.
+                    next = save;
+                    break;
+                default:
+                    Console.WriteLine("Syntax error: expected TokenType.A or TokenType.B, got {0}", token.Type);
+                    break;
+            }
+        }
+
+        public bool Parse(List<Token> tokens)
+        {
+            next = 0;
+            this.tokens = tokens;
+
+            S();
+
+            return true;
+        }
+
+        private Token Next()
+        {
+            if(next < tokens.Count)
+            {
+                return tokens[next++];
+            }
+
+            // Maybe EOF???
+            return null;
+        }
+    }
+
+    class BacktrackingParser
+    {
         int next;
         List<Token> tokens;
 

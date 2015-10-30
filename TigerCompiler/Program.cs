@@ -18,13 +18,15 @@ namespace TigerCompiler
 
             List<Token> tokens = lexer.Tokenize();
 
-            Parser parser = new Parser();
+            BacktrackingParser btParser = new BacktrackingParser();
+            PredictiveParser ptParser = new PredictiveParser();
             //tokens = new List<Token> { new Token(TokenType.Id), new Token(TokenType.Plus), new Token(TokenType.Id), new Token(TokenType.Multiply), new Token(TokenType.Id) };
             //tokens = new List<Token> { new Token(TokenType.LParen), new Token(TokenType.Id), new Token(TokenType.RParen) };
             //Console.WriteLine(parser.Parse(tokens));
 
             tokens = new List<Token> { new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.B), new Token(TokenType.Eof) };
-            Console.WriteLine(parser.Parse(tokens));
+            Console.WriteLine("Backtracking Parser\n" + btParser.Parse(tokens));
+            Console.WriteLine("Predictive Parser\n" + ptParser.Parse(tokens));
 
             Console.WriteLine("\nPress any key to quit...");
             Console.ReadKey(true);
