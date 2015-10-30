@@ -1,6 +1,6 @@
 # Tiger Compiler
 
-A C# implementation of a compiler for the Tiger programming language.
+A (in progress) C# implementation of a compiler for the Tiger programming language.
 The implementation is based on the book "Modern Compiler Implementation in C" by Andrew W Appel.
 Please see https://www.cs.princeton.edu/~appel/modern/c/ for more information.
 
@@ -10,7 +10,7 @@ Please see https://www.cs.princeton.edu/~appel/modern/c/ for more information.
 - Added example top-down parsers for a simple grammar (one with backtracking and one based on the parsing table)
 
 ## TODO
-- During my investigations on parsing techniques over the past week, I have found I could spend a long time attempting to get a valid grammar
+During my investigation on parsing techniques over the past week, I have found I could spend a long time attempting to get a valid grammar
 for my compiler. I have decided to implement a much simpler grammar such as a calculator with +, -, * and /. This will allow me to focus on the
 overall compiler construction rather than getting bogged down implementing a parser for the complete Tiger programming language. That being said
 once I have an overall understanding of compiler construction, I will come back and implement a more complex grammar.
