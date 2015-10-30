@@ -5,66 +5,34 @@
 
     class Parser
     {
-        // Grammar
-        // E -> T + E
-        // E -> T
-        // T -> id
-
         int next;
         List<Token> tokens;
 
-        private int indent;
-        private string indentString = string.Empty;
-
-        private void Enter()
-        {
-            indentString = string.Empty;
-
-            indent++;
-            indentString = indentString.ToString().PadLeft(4*indent, '-');
-        }
-
-        private void Exit()
-        {
-            indentString = string.Empty;
-
-            indent--;
-            indentString = indentString.ToString().PadLeft(4*indent, '-');
-        }
-
         private bool E()
         {
-            Enter();
-
             int save = next;
 
             if (E1())
             {
-                Exit();
                 return true;
             }
             next = save;
 
             if (E2())
             {
-                Exit();
                 return true;
             }
 
-            Exit();
             return false;
         }
 
         private bool T()
         {
-            Enter();
             if (T1())
             {
-                Exit();
                 return true;
             }
 
-            Exit();
             return false;
         }
 
@@ -72,7 +40,7 @@
         {
             // E -> T + E
             bool result = T() && Expect(TokenType.Plus) && E();
-            Console.WriteLine(indentString + "E -> T + E : " + result);
+            Console.WriteLine("E -> T + E : " + result);
             return result;
         }
 
@@ -80,7 +48,7 @@
         {
             // E -> T
             bool result = T();
-            Console.WriteLine(indentString + "E -> T : " + result);
+            Console.WriteLine("E -> T : " + result);
             return result;
         }
 
@@ -88,7 +56,7 @@
         {
             // T -> id
             bool result = Expect(TokenType.Id);
-            Console.WriteLine(indentString + "T -> id : " + result);
+            Console.WriteLine("T -> id : " + result);
             return result;
         }
 
