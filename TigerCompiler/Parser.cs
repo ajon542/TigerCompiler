@@ -40,12 +40,6 @@
         {
             Token token = Next();
 
-            if(token == null)
-            {
-                Console.WriteLine("Error: token list is empty");
-                return;
-            }
-
             switch(token.Type)
             {
                 case TokenType.A:
@@ -146,7 +140,6 @@
                 return tokens[next++];
             }
 
-            // Maybe EOF???
             return null;
         }
     }
