@@ -24,7 +24,8 @@ namespace TigerCompiler
             //tokens = new List<Token> { new Token(TokenType.LParen), new Token(TokenType.Id), new Token(TokenType.RParen) };
             //Console.WriteLine(parser.Parse(tokens));
 
-            tokens = new List<Token> { new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.B), new Token(TokenType.Eof) };
+            //tokens = new List<Token> { new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.B), new Token(TokenType.Eof) };
+            tokens = new List<Token> { new Token(TokenType.A), new Token(TokenType.B), new Token(TokenType.B), new Token(TokenType.Eof) };
             Console.WriteLine("Backtracking Parser\n" + btParser.Parse(tokens));
             Console.WriteLine("Predictive Parser\n" + ptParser.Parse(tokens));
 

@@ -190,7 +190,7 @@
             next = save;
 
             // B -> e
-            return false;
+            return true;
         }
 
         private bool C()
@@ -208,7 +208,7 @@
             next = save;
 
             // C -> e
-            return false;
+            return true;
         }
 
         public bool Parse(List<Token> tokens)
