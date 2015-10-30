@@ -36,6 +36,9 @@
         int next;
         List<Token> tokens;
 
+        /// <summary>
+        /// The starting production.
+        /// </summary>
         private void S()
         {
             Token token = Next();
