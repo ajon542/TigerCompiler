@@ -7,6 +7,17 @@
     [TestClass]
     public class ParserTests
     {
+        // Test strings
+        // aaaab
+        // abb
+        // aa
+        // aaa
+
+
+        [TestMethod]
+        public void Test()
+        {
+        }
 
     }
 }
