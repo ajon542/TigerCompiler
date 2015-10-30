@@ -23,7 +23,11 @@ namespace TigerCompiler
 
         // Keywords
         If,
-        Else
+        Else,
+
+        // Test Tokens
+        A,
+        B
     }
 
     /// <summary>
