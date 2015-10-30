@@ -57,10 +57,7 @@ namespace UnitTests
                 TokenType.Id,
                 TokenType.Eof);
 
-            if (tokens[0].Value != "abc")
-            {
-                Assert.Fail("The lexer should generate the correct token value.");
-            }
+            Assert.AreEqual(tokens[0].Value, "abc");
         }
 
         /// <summary>
@@ -76,10 +73,7 @@ namespace UnitTests
                 TokenType.Id,
                 TokenType.Eof);
 
-            if (tokens[0].Value != "abc123")
-            {
-                Assert.Fail("The lexer should generate the correct token value.");
-            }
+            Assert.AreEqual(tokens[0].Value, "abc123");
         }
 
         /// <summary>
@@ -95,10 +89,7 @@ namespace UnitTests
                 TokenType.Num,
                 TokenType.Eof);
 
-            if (tokens[0].Value != "123")
-            {
-                Assert.Fail("The lexer should generate the correct token value.");
-            }
+            Assert.AreEqual(tokens[0].Value, "123");
         }
 
         /// <summary>
@@ -115,15 +106,8 @@ namespace UnitTests
                 TokenType.Id,
                 TokenType.Eof);
 
-            if (tokens[0].Value != "123")
-            {
-                Assert.Fail("The lexer should generate the correct token value.");
-            }
-
-            if (tokens[1].Value != "abc")
-            {
-                Assert.Fail("The lexer should generate the correct token value.");
-            }
+            Assert.AreEqual(tokens[0].Value, "123");
+            Assert.AreEqual(tokens[1].Value, "abc");
         }
 
         /// <summary>
@@ -141,10 +125,7 @@ namespace UnitTests
                 TokenType.RParen,
                 TokenType.Eof);
 
-            if (tokens[0].Value != "print")
-            {
-                Assert.Fail("The lexer should generate the correct token value.");
-            }
+            Assert.AreEqual(tokens[0].Value, "print");
         }
 
         /// <summary>
@@ -174,10 +155,7 @@ namespace UnitTests
 
             for (int i = 0; i < tokens.Count; ++i)
             {
-                if (tokens[i].Type != expectedTokenTypes[i])
-                {
-                    Assert.Fail("The lexer should generate the correct tokens.");
-                }
+                Assert.AreEqual(tokens[i].Type, expectedTokenTypes[i]);
             }
         }
     }

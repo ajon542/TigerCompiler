@@ -19,13 +19,13 @@
     // -------------------------------
 
     // Parsing Table
-    //     | a         | b         | $       |
-    // ----|-----------|-----------|---------|
-    // S   | S -> aABC |           |         |
-    // A   | A -> a    | A -> bb   |         |
-    // B   | B -> a    | B -> e    | B -> e  |
-    // C   |           | C -> b    | C -> e  |
-    // --------------------------------------------------
+    //       | a         | b         | $       |
+    // |-----|-----------|-----------|---------|
+    // | S   | S -> aABC |           |         |
+    // | A   | A -> a    | A -> bb   |         |
+    // | B   | B -> a    | B -> e    | B -> e  |
+    // | C   |           | C -> b    | C -> e  |
+    // ---------------------------------------
 
     // From the parsing table we can see there are no duplicate
     // entries in any of the cells. This means the grammar is LL(1).
