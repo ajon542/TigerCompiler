@@ -13,16 +13,14 @@ namespace TigerCompiler
 
         static void Main(string[] args)
         {
-            //Lexer lexer = new Lexer("if then else blah *\n * (123) {abc   } ab1234 123ab\n andrew jones");
-            //lexer.ErrorEventHandler += ErrorHandler;
-
-            //List<Token> tokens = lexer.Tokenize();
-
-            // Interesting test, Parsing does fail, but we don't get any syntax error print.
             bool result = RunParser(
                 TokenType.Id,
                 TokenType.Plus,
-                //TokenType.Id,
+                TokenType.Id,
+                TokenType.RParen,
+                TokenType.Id,
+                TokenType.RParen,
+                TokenType.RParen,
                 TokenType.RParen,
                 TokenType.Eof);
 

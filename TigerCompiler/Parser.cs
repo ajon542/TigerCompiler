@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
 
     // Grammar
     // (epsilon = e)
@@ -439,9 +440,29 @@
             errorCount = 0;
             this.tokens = tokens;
 
+            // Start parsing.
             S();
 
-            return (errorCount == 0) && (Next().Type == TokenType.Eof);
+            // Check for unparsed tokens. Could occur with mismatching right parentheses.
+            bool unparsedTokens = false;
+            StringBuilder sb = new StringBuilder();
+            TokenType type = Next().Type;
+            while (type != TokenType.Eof)
+            {
+                unparsedTokens = true;
+                sb.AppendFormat("{0}, ", type);
+                type = Next().Type;
+            }
+
+            // Print error message for unparsed tokens.
+            if(unparsedTokens)
+            {
+                sb.AppendFormat("{0}", type);
+                Console.WriteLine("Syntax error: unparsed tokens [ " + sb.ToString() + " ]");
+            }
+
+            // Return error status.
+            return (errorCount == 0) && (!unparsedTokens);
         }
 
         private void Error(string errorString)

@@ -207,7 +207,6 @@
                 TokenType.Id,
                 TokenType.RParen,
                 TokenType.Eof);
-            throw new Exception("Interesting test, Parsing does fail, but we don't get any syntax error print.");
         }
 
         /// <summary>
