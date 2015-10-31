@@ -25,7 +25,7 @@
     // | A   | A -> a    | A -> bb   |         |
     // | B   | B -> a    | B -> e    | B -> e  |
     // | C   |           | C -> b    | C -> e  |
-    // ---------------------------------------
+    // -----------------------------------------
 
     // From the parsing table we can see there are no duplicate
     // entries in any of the cells. This means the grammar is LL(1).
@@ -44,7 +44,7 @@
         {
             Token token = Next();
 
-            switch(token.Type)
+            switch (token.Type)
             {
                 case TokenType.A:
                     A(); B(); C();
@@ -65,11 +65,11 @@
                     break;
                 case TokenType.B:
                     token = Next();
-                    if(token == null)
+                    if (token == null)
                     {
                         Error(string.Format("Syntax error: expected TokenType.B, no more tokens to parse"));
                     }
-                    else if(token.Type != TokenType.B)
+                    else if (token.Type != TokenType.B)
                     {
                         Error(string.Format("Syntax error: expected TokenType.B, got {0}", token.Type));
                     }
@@ -130,6 +130,7 @@
         public bool Parse(List<Token> tokens)
         {
             next = 0;
+            errorCount = 0;
             this.tokens = tokens;
 
             S();
@@ -145,7 +146,7 @@
 
         private Token Next()
         {
-            if(next < tokens.Count)
+            if (next < tokens.Count)
             {
                 return tokens[next++];
             }
@@ -227,7 +228,7 @@
             this.tokens = tokens;
 
             bool result = S();
-  
+
             return result;
         }
 
@@ -242,129 +243,76 @@
         }
     }
 
-    class ParserWithSomeBug
-    {
-        // Example Grammar
-        // E -> T + E
-        // E -> T
-        // T -> id
-        // T -> id * T
-        // T -> (E)
+    // Grammar
+    // (epsilon = e)
+    // S  -> E
+    // E  -> TE'
+    // E' -> +TE'
+    // E' -> -TE'
+    // E' -> e
+    // T  -> FT'
+    // T' -> *FT'
+    // T' -> /FT'
+    // T' -> e
+    // F  -> id
+    // F  -> num
+    // F  -> (E)
 
+    // | Symbol | First        | Follow             |
+    // | -------|--------------|--------------------|
+    // | S      | {id, num, (} | {$}                |
+    // | E      | {id, num, (} | {$, )}             |
+    // | E'     | {+, -, e}    | {$, )}             |
+    // | T      | {id, num, (} | {$, +, -, )}       |
+    // | T'     | {*, /, e}    | {$, +, -, )}       |
+    // | F      | {id, num, (} | {$, +, -, *, /, )} |
+    // ----------------------------------------------
+
+    // Parsing Table
+    //       | +          | -          | *          | /          | id       | num      | (        | )       | $       |
+    // |-----|------------|------------|------------|------------|----------|----------|----------|---------|---------|
+    // | S   | na         | na         | na         | na         | S -> E   | S -> E   | S -> E   | na      | na      |
+    // | E   | na         | na         | na         | na         | E -> TE' | E -> TE' | E -> TE' | na      | na      |
+    // | E'  | E' -> +TE' | E' -> -TE' | na         | na         | na       | na       | na       | E' -> e | E' -> e |
+    // | T   | na         | na         | na         | na         | T -> FT' | T -> FT' | T -> FT' | na      | na      |
+    // | T'  | T' -> e    | T' -> e    | T' -> *FT' | T' -> /FT' | na       | na       | na       | T' -> e | T' -> e |
+    // | F   | na         | na         | na         | na         | F -> id  | F -> num | F -> (E) | na      | na      |
+    // ----------------------------------------------------------------------------------------------------------------
+    class Parser
+    {
         int next;
         List<Token> tokens;
+        int errorCount;
 
-        private bool E()
+        private void S()
         {
-            int save = next;
-
-            if (E1())
-            {
-                //Console.WriteLine("E1");
-                return true;
-            }
-            next = save;
-
-            if (E2())
-            {
-                //Console.WriteLine("E2");
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool T()
-        {
-            int save = next;
-
-            if (T1())
-            {
-                //Console.WriteLine("T1");
-                return true;
-            }
-            next = save;
-
-            if (T2())
-            {
-                //Console.WriteLine("T2");
-                return true;
-            }
-            next = save;
-
-            if (T3())
-            {
-                //Console.WriteLine("T3");
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool E1()
-        {
-            // E -> T + E
-            bool result = T() && Expect(TokenType.Plus) && E();
-            Console.WriteLine("E -> T + E : " + result + ", next=" + next);
-            return result;
-        }
-
-        private bool E2()
-        {
-            // E -> T
-            bool result = T();
-            Console.WriteLine("E -> T : " + result + ", next=" + next);
-            return result;
-        }
-
-        private bool T1()
-        {
-            // T -> id
-            bool result = Expect(TokenType.Id);
-            Console.WriteLine("T -> id : " + result + ", next=" + next);
-            return result;
-        }
-
-        private bool T2()
-        {
-            // T -> id * T
-            bool result = Expect(TokenType.Id) && Expect(TokenType.Multiply) && T();
-            Console.WriteLine("T -> id * T : " + result + ", next=" + next);
-            return result;
-        }
-
-        private bool T3()
-        {
-            // T -> (E)
-            bool result = Expect(TokenType.LParen) && E() && Expect(TokenType.RParen);
-            Console.WriteLine("T -> (E) : " + result + ", next=" + next);
-            return result;
-        }
-
-        private bool Expect(TokenType tokenType)
-        {
-            if (next < tokens.Count)
-            {
-                bool result = tokenType == tokens[next++].Type;
-                return result;
-            }
-            return false;
         }
 
         public bool Parse(List<Token> tokens)
         {
             next = 0;
-            bool result = true;
+            errorCount = 0;
             this.tokens = tokens;
 
-            // Parse the entire input.
-            // TODO: Error checking.
-            while(next != tokens.Count)
+            S();
+
+            return (errorCount == 0) && (Next().Type == TokenType.Eof);
+        }
+
+        private void Error(string errorString)
+        {
+            errorCount++;
+            Console.WriteLine(errorString);
+        }
+
+        private Token Next()
+        {
+            if (next < tokens.Count)
             {
-                result &= E();
+                return tokens[next++];
             }
 
-            return result;
+            return null;
         }
     }
 }
