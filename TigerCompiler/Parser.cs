@@ -50,8 +50,7 @@
                     A(); B(); C();
                     break;
                 default:
-                    errorCount++;
-                    Console.WriteLine("Syntax error: expected TokenType.A, got {0}", token.Type);
+                    Error(string.Format("Syntax error: expected TokenType.A, got {0}", token.Type));
                     break;
             }
         }
@@ -68,19 +67,16 @@
                     token = Next();
                     if(token == null)
                     {
-                        errorCount++;
-                        Console.WriteLine("Syntax error: expected TokenType.B, no more tokens to parse");
+                        Error(string.Format("Syntax error: expected TokenType.B, no more tokens to parse"));
                     }
                     else if(token.Type != TokenType.B)
                     {
-                        errorCount++;
-                        Console.WriteLine("Syntax error: expected TokenType.B, got {0}", token.Type);
+                        Error(string.Format("Syntax error: expected TokenType.B, got {0}", token.Type));
                     }
 
                     break;
                 default:
-                    errorCount++;
-                    Console.WriteLine("Syntax error: expected TokenType.A or TokenType.B, got {0}", token.Type);
+                    Error(string.Format("Syntax error: expected TokenType.A or TokenType.B, got {0}", token.Type));
                     break;
             }
         }
@@ -105,8 +101,7 @@
                     next = save;
                     break;
                 default:
-                    errorCount++;
-                    Console.WriteLine("Syntax error: expected TokenType.A or TokenType.B, got {0}", token.Type);
+                    Error(string.Format("Syntax error: expected TokenType.A or TokenType.B, got {0}", token.Type));
                     break;
             }
         }
@@ -127,8 +122,7 @@
                     next = save;
                     break;
                 default:
-                    errorCount++;
-                    Console.WriteLine("Syntax error: expected TokenType.A or TokenType.B, got {0}", token.Type);
+                    Error(string.Format("Syntax error: expected TokenType.A or TokenType.B, got {0}", token.Type));
                     break;
             }
         }
@@ -141,6 +135,12 @@
             S();
 
             return (errorCount == 0) && (Next().Type == TokenType.Eof);
+        }
+
+        private void Error(string errorString)
+        {
+            errorCount++;
+            Console.WriteLine(errorString);
         }
 
         private Token Next()
