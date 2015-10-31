@@ -103,21 +103,8 @@ namespace TigerCompiler
                         token = new Token(TokenType.Semicolon, scanner.Line, scanner.Column);
                         break;
                     default:
-
                         token = new Token(TokenType.Unknown, scanner.Line, scanner.Column);
-
-                        EventHandler<ErrorEventArgs> handler = ErrorEventHandler;
-
-                        if (handler != null)
-                        {
-                            handler(this, new ErrorEventArgs
-                            {
-                                Token = token,
-                                Line = scanner.Line,
-                                Column = scanner.Column
-                            });
-                        }
-
+                        Error(token);
                         break;
                 }
 
@@ -125,6 +112,25 @@ namespace TigerCompiler
             }
 
             return token;
+        }
+
+        /// <summary>
+        /// Call the error handler.
+        /// </summary>
+        /// <param name="token">The token causing the error.</param>
+        private void Error(Token token)
+        {
+            EventHandler<ErrorEventArgs> handler = ErrorEventHandler;
+
+            if (handler != null)
+            {
+                handler(this, new ErrorEventArgs
+                {
+                    Token = token,
+                    Line = token.Line,
+                    Column = token.Column
+                });
+            }
         }
 
         /// <summary>
