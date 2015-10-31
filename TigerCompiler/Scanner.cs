@@ -31,7 +31,7 @@ namespace TigerCompiler
         /// <summary>
         /// Gets the current offset into the line.
         /// </summary>
-        public int LineOffset { get; private set; }
+        public int Column { get; private set; }
 
         /// <summary>
         /// Gets the current character indexed by the scanner.
@@ -56,7 +56,7 @@ namespace TigerCompiler
             if (inputIndex < input.Length)
             {
                 Ch = input[inputIndex++];
-                LineOffset++;
+                Column++;
             }
             else
             {
@@ -65,7 +65,7 @@ namespace TigerCompiler
 
             if (Ch == '\n')
             {
-                LineOffset = 0;
+                Column = 0;
                 Line++;
             }
         }

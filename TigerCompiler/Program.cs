@@ -8,7 +8,7 @@ namespace TigerCompiler
     {
         private static void ErrorHandler(object sender, ErrorEventArgs e)
         {
-            Console.WriteLine("Unknown token at line: {0}, position: {1}", e.Line, e.LineOffset);
+            Console.WriteLine("Unknown token at line: {0}, position: {1}", e.Line, e.Column);
         }
 
         static void Main(string[] args)
@@ -26,7 +26,7 @@ namespace TigerCompiler
 
             //tokens = new List<Token> { new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.B), new Token(TokenType.Eof) };
             //tokens = new List<Token> { new Token(TokenType.A), new Token(TokenType.B), new Token(TokenType.B), new Token(TokenType.Eof) };
-            tokens = new List<Token> { new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.Eof) };
+            tokens = new List<Token> { new Token(TokenType.A, 0, 0), new Token(TokenType.A, 0, 0), new Token(TokenType.Eof, 0, 0) };
             //tokens = new List<Token> { new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.Eof) };
             //tokens = new List<Token> { new Token(TokenType.B), new Token(TokenType.Eof) };
             

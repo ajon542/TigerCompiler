@@ -46,13 +46,27 @@ namespace TigerCompiler
         public string Value { get; private set; }
 
         /// <summary>
+        /// Gets the line number of the token.
+        /// </summary>
+        public int Line { get; private set; }
+
+        /// <summary>
+        /// Gets the column number of the token.
+        /// </summary>
+        public int Column { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Token"/> class.
         /// </summary>
         /// <param name="type">The type of token.</param>
+        /// <param name="line">The line number of the token.</param>
+        /// <param name="column">The column number of the token.</param>
         /// <param name="value">The value for the token.</param>
-        public Token(TokenType type, string value = "")
+        public Token(TokenType type, int line, int column, string value = "")
         {
             Type = type;
+            Line = line;
+            Column = column;
             Value = value;
         }
 

@@ -22,7 +22,7 @@ namespace TigerCompiler
         /// <summary>
         /// Gets or sets the offset into the line the error occurred on.
         /// </summary>
-        public int LineOffset { get; set; }
+        public int Column { get; set; }
     }
 
     /// <summary>
@@ -62,49 +62,49 @@ namespace TigerCompiler
                 // TODO: Handle keywords a little better.
                 if (id == "if")
                 {
-                    token = new Token(TokenType.If);
+                    token = new Token(TokenType.If, scanner.Line, scanner.Column);
                 }
                 else if (id == "else")
                 {
-                    token = new Token(TokenType.Else);
+                    token = new Token(TokenType.Else, scanner.Line, scanner.Column);
                 }
                 else
                 {
-                    token = new Token(TokenType.Id, id);
+                    token = new Token(TokenType.Id, scanner.Line, scanner.Column, id);
                 }
             }
             else if (Char.IsDigit(scanner.Ch))
             {
-                token = new Token(TokenType.Num, scanner.ReadNumber());
+                token = new Token(TokenType.Num, scanner.Line, scanner.Column, scanner.ReadNumber());
             }
             else
             {
                 switch (scanner.Ch)
                 {
                     case '\0':
-                        token = new Token(TokenType.Eof);
+                        token = new Token(TokenType.Eof, scanner.Line, scanner.Column);
                         break;
                     case '{':
-                        token = new Token(TokenType.LBrace);
+                        token = new Token(TokenType.LBrace, scanner.Line, scanner.Column);
                         break;
                     case '}':
-                        token = new Token(TokenType.RBrace);
+                        token = new Token(TokenType.RBrace, scanner.Line, scanner.Column);
                         break;
                     case '(':
-                        token = new Token(TokenType.LParen);
+                        token = new Token(TokenType.LParen, scanner.Line, scanner.Column);
                         break;
                     case ')':
-                        token = new Token(TokenType.RParen);
+                        token = new Token(TokenType.RParen, scanner.Line, scanner.Column);
                         break;
                     case ',':
-                        token = new Token(TokenType.Comma);
+                        token = new Token(TokenType.Comma, scanner.Line, scanner.Column);
                         break;
                     case ';':
-                        token = new Token(TokenType.Semicolon);
+                        token = new Token(TokenType.Semicolon, scanner.Line, scanner.Column);
                         break;
                     default:
 
-                        token = new Token(TokenType.Unknown);
+                        token = new Token(TokenType.Unknown, scanner.Line, scanner.Column);
 
                         EventHandler<ErrorEventArgs> handler = ErrorEventHandler;
 
@@ -114,7 +114,7 @@ namespace TigerCompiler
                             {
                                 Token = token,
                                 Line = scanner.Line,
-                                LineOffset = scanner.LineOffset
+                                Column = scanner.Column
                             });
                         }
 
