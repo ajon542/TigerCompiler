@@ -18,7 +18,8 @@ namespace TigerCompiler
 
         Plus,
         Minus,
-        Multiply,
+        Mul,
+        Div,
 
 
         // Keywords
