@@ -1,5 +1,6 @@
 ﻿namespace UnitTests
 {
+    using System;
     using System.Collections.Generic;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TigerCompiler;
@@ -195,6 +196,18 @@
                 TokenType.Id,
                 TokenType.RParen,
                 TokenType.Eof);
+        }
+
+        [TestMethod]
+        public void TestHangingRightParen()
+        {
+            RunParser(false,
+                TokenType.Id,
+                TokenType.Plus,
+                TokenType.Id,
+                TokenType.RParen,
+                TokenType.Eof);
+            throw new Exception("Interesting test, Parsing does fail, but we don't get any syntax error print.");
         }
 
         /// <summary>

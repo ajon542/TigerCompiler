@@ -18,9 +18,12 @@ namespace TigerCompiler
 
             //List<Token> tokens = lexer.Tokenize();
 
+            // Interesting test, Parsing does fail, but we don't get any syntax error print.
             bool result = RunParser(
                 TokenType.Id,
                 TokenType.Plus,
+                //TokenType.Id,
+                TokenType.RParen,
                 TokenType.Eof);
 
             string status = result ? "Parsing succeeded" : "Parsing failed";

@@ -397,7 +397,7 @@
                     next = save;
                     break;
                 default:
-                    Error(string.Format("Syntax error({0},{1}): expected [ *, /, ), Eof ], got {2}", token.Line, token.Column, token.Type));
+                    Error(string.Format("Syntax error({0},{1}): expected [ +, -, *, /, ), Eof ], got {2}", token.Line, token.Column, token.Type));
                     break;
             }
         }
@@ -457,7 +457,7 @@
                 return tokens[next++];
             }
 
-            return null;
+            return new Token(TokenType.Eof, 0, 0);
         }
     }
 }
