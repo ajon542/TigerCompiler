@@ -290,6 +290,9 @@
 
         public bool Parse(List<Token> tokens)
         {
+            // Cause all unit tests to fail for now as nothing has been implemented yet.
+            throw new NotImplementedException();
+
             next = 0;
             errorCount = 0;
             this.tokens = tokens;
