@@ -286,13 +286,145 @@
 
         private void S()
         {
+            E();
+            /*Token token = Next();
+
+            switch (token.Type)
+            {
+                case TokenType.Id:
+                case TokenType.Num:
+                case TokenType.LParen:
+                    E();
+                    break;
+                default:
+                    Error(string.Format("Syntax error({0},{1}): expected [ id, num, ( ], got {2}", token.Line, token.Column, token.Type));
+                    break;
+            }*/
+        }
+
+        private void E()
+        {
+            Token token = Next();
+
+            switch (token.Type)
+            {
+                case TokenType.Id:
+                case TokenType.Num:
+                case TokenType.LParen:
+                    T();
+                    Ep();
+                    break;
+                default:
+                    Error(string.Format("Syntax error({0},{1}): expected [ id, num, ( ], got {2}", token.Line, token.Column, token.Type));
+                    break;
+            }
+        }
+
+        private void Ep()
+        {
+            int save = next;
+
+            Token token = Next();
+
+            switch (token.Type)
+            {
+                // E' -> +TE'
+                // E' -> -TE'
+                case TokenType.Plus:
+                case TokenType.Minus:
+                    T();
+                    Ep();
+                    break;
+
+                // Epsilon transitions.
+                case TokenType.RParen:
+                case TokenType.Eof:
+                    next = save;
+                    break;
+                default:
+                    Error(string.Format("Syntax error({0},{1}): expected [ +, -, ), Eof ], got {2}", token.Line, token.Column, token.Type));
+                    break;
+            }
+        }
+
+        private void T()
+        {
+            Token token = Next();
+
+            switch (token.Type)
+            {
+                case TokenType.Id:
+                case TokenType.Num:
+                case TokenType.LParen:
+                    F();
+                    Tp();
+                    break;
+                default:
+                    Error(string.Format("Syntax error({0},{1}): expected [ id, num, ( ], got {2}", token.Line, token.Column, token.Type));
+                    break;
+            }
+        }
+
+        private void Tp()
+        {
+            int save = next;
+
+            Token token = Next();
+
+            switch (token.Type)
+            {
+                // T' -> *FT'
+                // T' -> /FT'
+                case TokenType.Mul:
+                case TokenType.Div:
+                    F();
+                    Tp();
+                    break;
+
+                // Epsilon transitions.
+                case TokenType.RParen:
+                case TokenType.Eof:
+                    next = save;
+                    break;
+                default:
+                    Error(string.Format("Syntax error({0},{1}): expected [ *, /, ), Eof ], got {2}", token.Line, token.Column, token.Type));
+                    break;
+            }
+        }
+
+        private void F()
+        {
+            Token token = Next();
+
+            switch (token.Type)
+            {
+                case TokenType.Id:
+                case TokenType.Num:
+                    break;
+
+                // F -> (E)
+                case TokenType.LParen:
+                    E();
+                    
+                    token = Next();
+                    if (token == null)
+                    {
+                        Error(string.Format("Syntax error: no more tokens to parse"));
+                    }
+                    else if (token.Type != TokenType.RParen)
+                    {
+                        Error(string.Format("Syntax error({0},{1}): expected [ ) ], got {2}", token.Line, token.Column, token.Type));
+                    }
+
+                    break;
+                default:
+                    Error(string.Format("Syntax error({0},{1}): expected [ id, num, ( ], got {2}", token.Line, token.Column, token.Type));
+                    break;
+            }
         }
 
         public bool Parse(List<Token> tokens)
         {
-            // Cause all unit tests to fail for now as nothing has been implemented yet.
-            throw new NotImplementedException();
-
             next = 0;
             errorCount = 0;
             this.tokens = tokens;

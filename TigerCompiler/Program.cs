@@ -13,25 +13,34 @@ namespace TigerCompiler
 
         static void Main(string[] args)
         {
-            Lexer lexer = new Lexer("if then else blah *\n * (123) {abc   } ab1234 123ab\n andrew jones");
-            lexer.ErrorEventHandler += ErrorHandler;
+            //Lexer lexer = new Lexer("if then else blah *\n * (123) {abc   } ab1234 123ab\n andrew jones");
+            //lexer.ErrorEventHandler += ErrorHandler;
 
-            List<Token> tokens = lexer.Tokenize();
+            //List<Token> tokens = lexer.Tokenize();
 
-            BacktrackingParser btParser = new BacktrackingParser();
-            PredictiveParser ptParser = new PredictiveParser();
+            //BacktrackingParser btParser = new BacktrackingParser();
+            //PredictiveParser ptParser = new PredictiveParser();
             //tokens = new List<Token> { new Token(TokenType.Id), new Token(TokenType.Plus), new Token(TokenType.Id), new Token(TokenType.Multiply), new Token(TokenType.Id) };
             //tokens = new List<Token> { new Token(TokenType.LParen), new Token(TokenType.Id), new Token(TokenType.RParen) };
             //Console.WriteLine(parser.Parse(tokens));
 
             //tokens = new List<Token> { new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.B), new Token(TokenType.Eof) };
             //tokens = new List<Token> { new Token(TokenType.A), new Token(TokenType.B), new Token(TokenType.B), new Token(TokenType.Eof) };
-            tokens = new List<Token> { new Token(TokenType.A, 0, 0), new Token(TokenType.A, 0, 0), new Token(TokenType.Eof, 0, 0) };
+            //tokens = new List<Token> { new Token(TokenType.A, 0, 0), new Token(TokenType.A, 0, 0), new Token(TokenType.Eof, 0, 0) };
             //tokens = new List<Token> { new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.A), new Token(TokenType.Eof) };
             //tokens = new List<Token> { new Token(TokenType.B), new Token(TokenType.Eof) };
             
-            Console.WriteLine("Backtracking Parser\n" + btParser.Parse(tokens));
-            Console.WriteLine("Predictive Parser\n" + ptParser.Parse(tokens));
+            //Console.WriteLine("Backtracking Parser\n" + btParser.Parse(tokens));
+            //Console.WriteLine("Predictive Parser\n" + ptParser.Parse(tokens));
+
+            List<Token> tokens = new List<Token> { new Token(TokenType.LParen, 0, 0), new Token(TokenType.Id, 0, 1), new Token(TokenType.Eof, 0, 2) };
+
+            Parser parser = new Parser();
+            bool result = parser.Parse(tokens);
+
+            string status = result ? "Parsing succeeded" : "Parsing failed";
+
+            Console.WriteLine(status);
 
             Console.WriteLine("\nPress any key to quit...");
             Console.ReadKey(true);
