@@ -286,24 +286,7 @@
 
         private void S()
         {
-            E();
-            /*Token token = Next();
-
-            switch (token.Type)
-            {
-                case TokenType.Id:
-                case TokenType.Num:
-                case TokenType.LParen:
-                    E();
-                    break;
-                default:
-                    Error(string.Format("Syntax error({0},{1}): expected [ id, num, ( ], got {2}", token.Line, token.Column, token.Type));
-                    break;
-            }*/
-        }
-
-        private void E()
-        {
+            int save = next;
             Token token = Next();
 
             switch (token.Type)
@@ -311,6 +294,28 @@
                 case TokenType.Id:
                 case TokenType.Num:
                 case TokenType.LParen:
+                    // Do not consume the character yet.
+                    next = save;
+                    E();
+                    break;
+                default:
+                    Error(string.Format("Syntax error({0},{1}): expected [ id, num, ( ], got {2}", token.Line, token.Column, token.Type));
+                    break;
+            }
+        }
+
+        private void E()
+        {
+            int save = next;
+            Token token = Next();
+
+            switch (token.Type)
+            {
+                case TokenType.Id:
+                case TokenType.Num:
+                case TokenType.LParen:
+                    // Do not consume the character yet.
+                    next = save;
                     T();
                     Ep();
                     break;
@@ -349,6 +354,7 @@
 
         private void T()
         {
+            int save = next;
             Token token = Next();
 
             switch (token.Type)
@@ -356,6 +362,8 @@
                 case TokenType.Id:
                 case TokenType.Num:
                 case TokenType.LParen:
+                    // Do not consume the character yet.
+                    next = save;
                     F();
                     Tp();
                     break;
@@ -382,6 +390,8 @@
                     break;
 
                 // Epsilon transitions.
+                case TokenType.Plus:
+                case TokenType.Minus:
                 case TokenType.RParen:
                 case TokenType.Eof:
                     next = save;
