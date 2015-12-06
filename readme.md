@@ -23,3 +23,7 @@ once I have an overall understanding of compiler construction, I will come back 
 - Implement unit tests for the simple grammar presented
 - Implement a parser for a more complex grammar such as a calculator
 - Construct the abstract syntax tree for the program
+
+### Abstract Syntax Tree
+- Read chapter
+- Implement AST
